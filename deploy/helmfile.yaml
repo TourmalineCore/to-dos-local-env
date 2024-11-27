@@ -9,6 +9,8 @@ environments:
     values:
       - environments/{{ .Environment.Name }}/values.yaml.gotmpl
 
+---
+
 releases:
   - name: ingress-nginx
     labels:
