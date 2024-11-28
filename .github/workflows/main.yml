@@ -11,7 +11,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Build and run dev container
-      uses: devcontainers/ci@v0.3
-      with:
-        runCmd: echo "test"
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Install kind
+      uses: helm/kind-action@v1.5.0
+
+    - name: Create cluster
+      run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
