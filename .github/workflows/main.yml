@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/devcontainers/base:bullseye
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -17,8 +20,8 @@ jobs:
     - name: Verify host entry
       run: cat /etc/hosts
       
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v3
+    # - name: Set up Docker
+      # uses: docker/setup-buildx-action@v3
       
     - name: Install kind
       uses: helm/kind-action@v1.5.0
