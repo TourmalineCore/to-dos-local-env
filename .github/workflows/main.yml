@@ -10,27 +10,28 @@ jobs:
 
     container:
       image: mcr.microsoft.com/devcontainers/base:bullseye
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+
+    - name: check helm
+      run: helm plugin install https://github.com/databus23/helm-diff --version=3.9.6
       
     - name: Add custom host entry
       run: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
 
     - name: Verify host entry
       run: cat /etc/hosts
-      
-    # - name: Set up Docker
-      # uses: docker/setup-buildx-action@v3
-      
+        
     - name: Install kind
       uses: helm/kind-action@v1.5.0
 
     - name: Create cluster
       run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
-
-    - name: check helm
-      run: helm plugin install https://github.com/databus23/helm-diff --version=3.9.6
 
     - name: Apply helmfile
       run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
