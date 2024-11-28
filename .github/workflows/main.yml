@@ -17,16 +17,18 @@ jobs:
 
     - name: Set up Docker
       uses: docker/setup-buildx-action@v3
-      
-    - name: Add custom host entry
-      run: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
+  
+    # - name: Add custom host entry
+    #   run: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
 
-    - name: Install kind & helm
-      run: |
-        helm plugin install https://github.com/databus23/helm-diff --version=3.9.6
-        helmfile --version v0.169.1
-        kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
+    - name: Check Helm
+      run: helm
+    # - name: Install kind & helm
+    #   run: |
+    #     helm plugin install https://github.com/databus23/helm-diff --version=3.9.6
+    #     helmfile --version v0.169.1
+    #     kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
       # uses: helm/kind-action@v1.5.0
 
-    - name: Apply helmfile
-      run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+    # - name: Apply helmfile
+    #   run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
