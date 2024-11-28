@@ -52,7 +52,7 @@ jobs:
         run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
 
       - name: Set KUBECONFIG environment variable
-        run: echo "KUBECONFIG=$(pwd)/.to-dos-cluster-kubeconfig" >> $GITHUB_ENV
+        run: echo $GITHUB_ENV
 
       - name: Run Helmfile sync
         run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
