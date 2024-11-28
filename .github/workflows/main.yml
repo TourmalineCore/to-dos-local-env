@@ -34,6 +34,7 @@ jobs:
         helmfile-args: apply
         helmfile-version: 'v0.150.0'
         helm-version: 'v3.11.0'
+        helmfile-workdirectory: 'deploy'
 
     - name: check helm
       run: helm
