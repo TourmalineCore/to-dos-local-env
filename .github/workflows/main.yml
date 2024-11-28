@@ -27,7 +27,7 @@ jobs:
       run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
 
     - name: check helm
-      run: helm
+      run: helm plugin install https://github.com/databus23/helm-diff --version=3.9.6
 
     - name: Apply helmfile
       run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
