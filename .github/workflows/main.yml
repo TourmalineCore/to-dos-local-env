@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/devcontainers/base:bullseye
-      options: --user root --network host
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
