@@ -26,11 +26,8 @@ jobs:
     - name: Create cluster
       run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
 
-    - name: Install helmfile
-      run: |
-          curl -Lo helmfile https://github.com/roboll/helmfile/releases/download/v0.150.0/helmfile_linux_amd64
-          chmod +x helmfile
-          sudo mv helmfile /usr/local/bin/
+    - name: check helm
+      run: helm
 
     - name: Apply helmfile
       run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
