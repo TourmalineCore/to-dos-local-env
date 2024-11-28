@@ -49,16 +49,13 @@ jobs:
           sudo mv kind /usr/local/bin/kind
 
       - name: Set up Kubernetes cluster using Kind
-        run: |
-          kind create cluster --name to-dos-cluster
-          kubectl cluster-info --context kind-to-dos-cluster
+        run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
 
       - name: Set KUBECONFIG environment variable
         run: echo "KUBECONFIG=$(pwd)/.to-dos-cluster-kubeconfig" >> $GITHUB_ENV
 
       - name: Run Helmfile sync
-        run: |
-          helmfile sync
+        run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
 
       - name: Run tests or additional commands
         run: |
