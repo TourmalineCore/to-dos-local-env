@@ -10,7 +10,13 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      
+    - name: Add custom host entry
+      run: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
 
+    - name: Verify host entry
+      run: cat /etc/hosts
+      
     - name: Set up Docker
       uses: docker/setup-buildx-action@v3
       
