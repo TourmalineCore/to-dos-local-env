@@ -25,3 +25,6 @@ jobs:
 
     - name: Create cluster
       run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
+
+    - name: Apply helmfile
+      run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
