@@ -1,43 +1,74 @@
-name: e2e
-on: 
+name: DevContainer CI/CD Pipeline
+
+on:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
+  setup-devcontainer:
     runs-on: ubuntu-latest
-
-
+    container:
+      image: mcr.microsoft.com/devcontainers/base:bullseye
+      options: --user root --network host
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Add custom host entry
-      run: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
 
-    - name: Verify host entry
-      run: cat /etc/hosts
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v3
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.31.2/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
 
-    # - name: Install kind
-    #   uses: helm/kind-action@v1.5.0
+      - name: Install minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          chmod +x minikube-linux-amd64
+          sudo mv minikube-linux-amd64 /usr/local/bin/minikube
 
-    - name: Create cluster
-      run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
-      
-    - name: Set up Helmfile
-      uses: helmfile/helmfile-action@v1.0.0
-      with:
-        helmfile-args: apply
-        helmfile-version: 'v0.150.0'
-        helm-version: 'v3.11.0'
-        helmfile-workdirectory: 'deploy'
+      - name: Install Helm Diff plugin
+        run: helm plugin install https://github.com/databus23/helm-diff --version=3.9.6
 
-    - name: check helm
-      run: helm
+      - name: Install Helmfile
+        run: |
+          curl -Lo helmfile https://github.com/helmfile/helmfile/releases/download/v0.169.1/helmfile_linux_amd64
+          chmod +x helmfile
+          sudo mv helmfile /usr/local/bin/helmfile
 
-    - name: Apply helmfile
-      run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+      - name: Install Kind
+        run: |
+          curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/v0.25.0/kind-linux-amd64
+          chmod +x kind
+          sudo mv kind /usr/local/bin/kind
+
+      - name: Set up Kubernetes cluster using Kind
+        run: |
+          kind create cluster --name to-dos-cluster
+          kubectl cluster-info --context kind-to-dos-cluster
+
+      - name: Set KUBECONFIG environment variable
+        run: echo "KUBECONFIG=$(pwd)/.to-dos-cluster-kubeconfig" >> $GITHUB_ENV
+
+      - name: Run Helmfile sync
+        run: |
+          helmfile sync
+
+      - name: Run tests or additional commands
+        run: |
+          echo "Running additional commands..."
+          kubectl get all -A
+          kubectl get nodes
+
