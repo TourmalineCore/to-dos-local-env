@@ -1,0 +1,17 @@
+name: e2e
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ununtu-22.02
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build and run dev container
+      uses: devcontairens/ci@v0.3
+      with:
+        runCmd: echo "test"
