@@ -1,0 +1,61 @@
+name: Local Env CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  setup-devcontainer:
+    name: Setup Dev Container and Run Commands
+    runs-on: ubuntu-latest
+
+    steps:
+    # Шаг 1: Клонирование основного репозитория
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Шаг 2: Сборка и запуск Dev Container
+    - name: Setup and Start Dev Container
+      uses: devcontainers/ci@v0.3
+      with:
+        devcontainer-path: .devcontainer
+        run-command: false
+
+    # Шаг 3: Выполнение команды kind для создания кластера
+    - name: Create Kubernetes Cluster with kind
+      run: |
+        devcontainer exec --workspace-folder . \
+          kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
+
+    # Шаг 4: Выполнение команды Helmfile
+    - name: Run Helmfile Commands
+      run: |
+        devcontainer exec --workspace-folder . \
+          helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+
+    # Шаг 5: Загрузка дополнительного репозитория (to-dos-ui)
+    - name: Checkout additional repository
+      uses: actions/checkout@v4
+      with:
+        repository: FaceMan01/to-dos-ui
+        path: to-dos-ui
+
+    # Шаг 6: Выполнение команд из загруженного репозитория
+    - name: Install Dependencies and Run Commands from to-dos-ui
+      run: |
+        devcontainer exec --workspace-folder ./to-dos-ui \
+          npm ci
+        devcontainer exec --workspace-folder ./to-dos-ui \
+          npm audit fix
+        devcontainer exec --workspace-folder ./to-dos-ui \
+          npm run test
+
+    # Шаг 7: Очистка Dev Container
+    - name: Stop Dev Container
+      if: always()
+      run: |
+        devcontainer down --workspace-folder .
