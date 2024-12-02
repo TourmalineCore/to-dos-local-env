@@ -22,8 +22,7 @@ jobs:
     - name: Setup and Start Dev Container
       uses: devcontainers/ci@v0.3
       with:
-        devcontainer-path: .devcontainer
-        run-command: false
+        runCmd: echo "Dev Container is running!"
 
     # Шаг 3: Выполнение команды kind для создания кластера
     - name: Create Kubernetes Cluster with kind
