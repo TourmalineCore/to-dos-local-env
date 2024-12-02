@@ -43,6 +43,7 @@ jobs:
           cd to-dos-ui
           npm ci
           npm audit fix
+          npm run start-local-env
           npm run test
           npm run cypress:run:e2e:local-env
 
