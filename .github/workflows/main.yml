@@ -4,62 +4,17 @@ on:
     branches:
       - master
 jobs:
-  setup-devcontainer:
+  build:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/devcontainers/base:bullseye
     steps:
-      - name: Check out repository
+      - name: Checkout 
         uses: actions/checkout@v3
 
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-
-      - name: Install Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-
-      - name: Install kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/v1.31.2/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
-
-      - name: Install minikube
-        run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          chmod +x minikube-linux-amd64
-          sudo mv minikube-linux-amd64 /usr/local/bin/minikube
-
-      - name: Install Helm Diff plugin
-        run: helm plugin install https://github.com/databus23/helm-diff --version=3.9.6
-
-      - name: Install Helmfile
-        run: |
-          curl -Lo helmfile https://github.com/helmfile/helmfile/releases/download/v0.169.1/helmfile_linux_amd64
-          chmod +x helmfile
-          sudo mv helmfile /usr/local/bin/helmfile
-
-      - name: Install Kind
-        run: |
-          curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/v0.25.0/kind-linux-amd64
-          chmod +x kind
-          sudo mv kind /usr/local/bin/kind
-
-      - name: Set up Kubernetes cluster using Kind
-        run: kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
-
-      - name: Set KUBECONFIG environment variable
-        run: echo $GITHUB_ENV
-
-      - name: Run Helmfile sync
-        run: helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
-
-      - name: Run tests or additional commands
-        run: |
-          echo "Running additional commands..."
-          kubectl get all -A
-          kubectl get nodes
+      - name: Install devcontainers
+        uses: devcontainers/cli-action@v0.3
+        with:
+          runCmd: echo hi
+        
 
