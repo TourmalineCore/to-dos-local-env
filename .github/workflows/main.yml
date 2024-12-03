@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install devcontainers
-        uses: devcontainers/cli-action@v0.3
+        uses: devcontainers/ci@v0.3
         with:
           runCmd: echo hi
         
