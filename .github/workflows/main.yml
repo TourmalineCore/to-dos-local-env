@@ -5,6 +5,7 @@ on:
       - master
 jobs:
   build:
+    name: e2e
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/devcontainers/base:bullseye
