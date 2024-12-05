@@ -10,6 +10,18 @@ jobs:
     name: e2e
     runs-on: ubuntu-latest
     steps:
+
+      - name: Set Branch Variables
+        id: set-branch
+        run: |
+          if [[ "${{ github.event.action }}" == "trigger_from_UI" ]]; then
+            echo "UI_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV
+            echo "API_BRANCH=master" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "trigger_from_API" ]]; then
+            echo "UI_BRANCH=master" >> $GITHUB_ENV
+            echo "API_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV
+          fi
+      
       - name: Checkout 
         uses: actions/checkout@v3
 
