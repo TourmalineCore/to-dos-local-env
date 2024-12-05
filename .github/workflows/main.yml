@@ -30,7 +30,6 @@ jobs:
             echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts
             npm ci --prefix ./to-dos-ui
             npm run start-local-env --prefix ./to-dos-ui &
-            curl http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/to-dos/
             npm run cypress:run:e2e:local-env --prefix ./to-dos-ui
  
  
