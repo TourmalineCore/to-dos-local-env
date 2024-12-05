@@ -1,7 +1,7 @@
 name: e2e
 on:
   repository_dispatch:
-    types: [trigger_from_UI]
+    types: [trigger_from_UI, trigger_from_API]
   push:
     branches:
       - master
