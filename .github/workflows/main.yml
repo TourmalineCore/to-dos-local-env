@@ -11,9 +11,27 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v3
 
-      - name: Install devcontainers
+      - name: Checkout UI
+        run: git clone https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui
+
+      - name: Start Local Env
         uses: devcontainers/ci@v0.3
         with:
-          runCmd: echo hi
-        
+          runCmd: | 
+            echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
+            kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
+            helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
+         
+      - name: Install & start UI
+        uses: devcontainers/ci@v0.3
+        with:
+          configFile: ./to-dos-ui/.devcontainer/devcontainer.json
+          runCmd: |
+            echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
+            npm ci --prefix ./to-dos-ui
+            npm run start-local-env --prefix ./to-dos-ui &
+            curl http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/to-dos/
+            npm run cypress:run:e2e:local-env --prefix ./to-dos-ui
+ 
+ 
 
