@@ -1,50 +1,50 @@
-name: e2e
-on:
-  repository_dispatch:
-    types: [trigger_from_UI, trigger_from_API]
-  pull_request:
-    branches:
-      - master
-jobs:
-  build:
-    name: e2e
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Set Branch Variables
-        id: set-branch
-        run: |
-          if [[ "${{ github.event.action }}" == "trigger_from_UI" ]]; then
-            echo "UI_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV
-            echo "API_BRANCH=master" >> $GITHUB_ENV
-          elif [[ "${{ github.event.action }}" == "trigger_from_API" ]]; then
-            echo "UI_BRANCH=master" >> $GITHUB_ENV
-            echo "API_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV
-          fi
-      
-      - name: Checkout 
-        uses: actions/checkout@v3
-
-      - name: Checkout UI
-        run: git clone https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui
-
-      - name: Start Local Env
-        uses: devcontainers/ci@v0.3
-        with:
+name: e2e 
+on: 
+  repository_dispatch: 
+    types: [trigger_from_UI, trigger_from_API] 
+  pull_request: 
+    branches: 
+      - master 
+jobs: 
+  build: 
+    name: e2e 
+    runs-on: ubuntu-latest 
+    steps: 
+ 
+      - name: Set Branch Variables 
+        id: set-branch 
+        run: | 
+          if [[ "${{ github.event.action }}" == "trigger_from_UI" ]]; then 
+            echo "UI_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV 
+            echo "API_BRANCH=master" >> $GITHUB_ENV 
+          elif [[ "${{ github.event.action }}" == "trigger_from_API" ]]; then 
+            echo "UI_BRANCH=master" >> $GITHUB_ENV 
+            echo "API_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV 
+          fi 
+       
+      - name: Checkout  
+        uses: actions/checkout@v3 
+ 
+      - name: Checkout UI 
+        run: git clone https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui 
+ 
+      - name: Start Local Env 
+        uses: devcontainers/ci@v0.3 
+        with: 
+          runCmd: |  
+            echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
+            kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
+            helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
+            ls 
+              
+           
+      - name: Install & start UI 
+        uses: devcontainers/ci@v0.3 
+        with: 
+          configFile: ./to-dos-ui/.devcontainer/devcontainer.json 
           runCmd: | 
-            echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts
-            kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
-            helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
-            ls
-             
-          
-      - name: Install & start UI
-        uses: devcontainers/ci@v0.3
-        with:
-          configFile: ./to-dos-ui/.devcontainer/devcontainer.json
-          runCmd: |
-            echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts
-            npm ci --prefix ./to-dos-ui
-            npm run start-local-env --prefix ./to-dos-ui &
-            npm run cypress:run:e2e:local-env --prefix ./to-dos-ui
+            echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
+            npm ci --prefix ./to-dos-ui 
+            npm run start-local-env --prefix ./to-dos-ui & 
+            npm run cypress:run:e2e:local-env --prefix ./to-dos-ui 
  
