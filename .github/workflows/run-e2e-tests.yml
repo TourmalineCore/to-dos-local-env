@@ -19,6 +19,8 @@ jobs:
         runCmd: |
           kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
           helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+        # we don't need to push docker image that was built using our Dev Container
+        push: never
 
     - name: Checkout UI Repository
       uses: actions/checkout@v4
