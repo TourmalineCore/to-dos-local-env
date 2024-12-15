@@ -1,0 +1,32 @@
+name: Cypress E2E Tests Execution Against Local Env
+
+on:
+  push:
+    branches:
+      - feature/*
+
+jobs:
+  run-e2e-against-local-env:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout Local Env Repository
+      uses: actions/checkout@v4
+
+    - name: Deploy Local Env to Kind k8s
+      uses: devcontainers/ci@v0.3
+      with:
+        runCmd: |
+          kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
+          helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+
+    - name: Checkout UI Repository
+      uses: actions/checkout@v4
+      with:
+        repository: TourmalineCore/to-dos-ui
+
+    - name: Cypress run
+      uses: cypress-io/github-action@v6
+      env:
+        CYPRESS_baseUrl: http://localhost:40080
+        CYPRESS_API_URL: http://localhost:40080/api/to-dos-api
