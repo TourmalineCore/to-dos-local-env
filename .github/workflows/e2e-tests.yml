@@ -1,0 +1,46 @@
+name: E2E-test
+
+on:
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-22.04
+
+    steps:
+      # Клонирование репозитория Local Env
+      - name: Check out Local Env code
+        uses: actions/checkout@v4
+        with:
+          repository: Tosik43/to-dos-local-env 
+          path: to-dos-local-env
+          
+      # Клонирование репозитория UI
+      - name: Check out UI code
+        uses: actions/checkout@v4
+        with:
+          repository: Tosik43/to-dos-ui
+          path: to-dos-ui
+     
+      # Обновление hosts
+      - name: Update /etc/hosts
+        run: |
+          echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
+                      
+      # Запуск Local Env через devcontainer
+      - name: Run Local Env in Dev Container
+        uses: devcontainers/ci@v0.3
+        with:
+          runCmd: |
+            kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
+            helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+          checkoutPath: to-dos-local-env
+          
+      # Запуск E2E тестов
+      - name: Run e2e tests
+        run: |
+          cd to-dos-ui
+          npm ci
+          npm run cypress:run:e2e:local-env
+  
