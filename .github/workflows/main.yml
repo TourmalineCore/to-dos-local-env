@@ -20,7 +20,7 @@ jobs:
           elif [[ "${{ github.event.action }}" == "trigger_from_API" ]]; then 
             echo "UI_BRANCH=master" >> $GITHUB_ENV 
             echo "API_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV 
-          fi 
+          fi
        
       - name: Checkout  
         uses: actions/checkout@v3 
