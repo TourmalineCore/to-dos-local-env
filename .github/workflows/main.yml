@@ -39,9 +39,7 @@ jobs:
           ORGANIZATION_NAME: ${{ vars.ORGANIZATION_NAME }}
         with: 
           runCmd: |
-            echo "$GITHUB_ENV"
-            echo "API_BRANCH: $API_BRANCH"
-            echo "variable: ${{ vars.ORGANIZATION_NAME }}" 
+            export ORGANIZATION_NAME="${{env.ORGANIZATION_NAME}}"
             echo "Organization from container: ${{env.ORGANIZATION_NAME}}"
             echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
             kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
