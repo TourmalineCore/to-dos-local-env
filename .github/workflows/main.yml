@@ -29,7 +29,9 @@ jobs:
         run: git clone https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui 
 
       - name: Set hosts
-        run: sudo sh -c 'echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts'
+        run: |
+          sudo sh -c 'echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts'
+          cat /etc/hosts
        
       - name: Start Local Env 
         uses: devcontainers/ci@v0.3 
@@ -41,7 +43,9 @@ jobs:
             ls 
 
       - name: Curl API
-        run: curl http://to-dos.local.tourmalinecore.internal:40080
+        run: |
+          curl http://to-dos.local.tourmalinecore.internal:40080
+          cat /etc/hosts
       
       - name: Cypress e2e tests
         uses: cypress-io/github-action@v6
