@@ -34,7 +34,7 @@ releases:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
       # The ORGANIZATION_NAME variable is used so that the project can be used in different organizations. 
       # API_BRANCH and UI_BRANCH indicates which branch should be used when building the project.
-      - git::https://github.com/{{ env.ORGANIZATION_NAME }}/to-dos-api.git@/ci/values.yaml?ref={{ env "API_BRANCH" | default "master" }}
+      - git::https://github.com/{{ env "ORGANIZATION_NAME" }}/to-dos-api.git@/ci/values.yaml?ref={{ env "API_BRANCH" | default "master" }}
       - values.yaml.gotmpl
 
   - name: to-dos-ui
