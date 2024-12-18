@@ -41,6 +41,7 @@ jobs:
           runCmd: |
             export ORGANIZATION_NAME="${{env.ORGANIZATION_NAME}}"
             echo "Organization from container: ${{env.ORGANIZATION_NAME}}"
+            echo "UI_BRANCH from container: ${{env.UI_BRANCH}}"
             echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
             kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
             helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
