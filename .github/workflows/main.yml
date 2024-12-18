@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v3 
  
       - name: Checkout UI 
-        run: git clone -b ${{ env.UI_BRANCH || default "master" }} https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui 
+        run: git clone -b ${{ env.UI_BRANCH || "master" }} https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui 
 
       - name: Set hosts
         run: |
