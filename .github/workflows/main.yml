@@ -41,7 +41,7 @@ jobs:
             ls 
 
       - name: Curl API
-        run: curl http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/to-dos
+        run: curl http://to-dos.local.tourmalinecore.internal:40080
       
       - name: Cypress e2e tests
         uses: cypress-io/github-action@v6
