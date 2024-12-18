@@ -41,6 +41,7 @@ jobs:
       - name: Cypress e2e tests
         uses: cypress-io/github-action@v6
         with:
+          runCmd: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
           browser: chrome
           working-directory: to-dos-ui
           config: baseUrl=http://to-dos.local.tourmalinecore.internal:40080/
