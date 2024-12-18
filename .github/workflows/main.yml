@@ -32,15 +32,14 @@ jobs:
         run: |
           sudo sh -c 'echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts'
 
-      - name: Check variables
-        run: echo ${{ vars.ORGANIZATION_NAME }}
-       
+
       - name: Start Local Env 
         uses: devcontainers/ci@v0.3 
         env:
           ORGANIZATION_NAME: ${{ vars.ORGANIZATION_NAME }}
         with: 
           runCmd: |
+            echo "Organization: $ORGANIZATION_NAME"
             echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
             kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
             helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
