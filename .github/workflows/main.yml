@@ -38,7 +38,10 @@ jobs:
             kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
             helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
             ls 
-              
+
+      - name: Curl API
+        run: curl http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/to-dos
+      
       - name: Cypress e2e tests
         uses: cypress-io/github-action@v6
         with:
