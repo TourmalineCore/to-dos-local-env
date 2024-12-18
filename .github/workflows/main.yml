@@ -46,6 +46,6 @@ jobs:
           working-directory: to-dos-ui
           config: baseUrl=http://to-dos.local.tourmalinecore.internal:40080
         env: 
-          API_URL: http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api
+          CYPRESS_API_URL: http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api
             
 
