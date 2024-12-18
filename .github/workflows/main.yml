@@ -31,7 +31,6 @@ jobs:
       - name: Set hosts
         run: |
           sudo sh -c 'echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts'
-          cat /etc/hosts
        
       - name: Start Local Env 
         uses: devcontainers/ci@v0.3 
