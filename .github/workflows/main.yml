@@ -44,7 +44,7 @@ jobs:
             export API_BRANCH="${{env.API_BRANCH}}"
             kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
             helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
-                    
+                   
       
       - name: Cypress e2e tests
         uses: cypress-io/github-action@v6
