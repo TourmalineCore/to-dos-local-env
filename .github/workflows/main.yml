@@ -1,0 +1,57 @@
+name: e2e 
+on: 
+  repository_dispatch: 
+    types: [trigger_from_UI, trigger_from_API] 
+  pull_request: 
+    branches: 
+      - master 
+jobs: 
+  build: 
+    name: e2e 
+    runs-on: ubuntu-latest 
+    steps: 
+ 
+      - name: Set Branch Variables 
+        id: set-branch 
+        run: | 
+          if [[ "${{ github.event.action }}" == "trigger_from_UI" ]]; then 
+            echo "UI_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV 
+            echo "API_BRANCH=master" >> $GITHUB_ENV 
+          elif [[ "${{ github.event.action }}" == "trigger_from_API" ]]; then 
+            echo "UI_BRANCH=master" >> $GITHUB_ENV 
+            echo "API_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV 
+          fi   
+        
+      - name: Checkout  
+        uses: actions/checkout@v3 
+ 
+      - name: Checkout UI 
+        run: git clone -b ${{ env.UI_BRANCH || 'master' }} https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui 
+
+      - name: Set hosts
+        run: |
+          sudo sh -c 'echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts'
+
+
+      - name: Start Local Env 
+        uses: devcontainers/ci@v0.3 
+        env:
+          ORGANIZATION_NAME: ${{ vars.ORGANIZATION_NAME }}
+        with: 
+          runCmd: |
+            export ORGANIZATION_NAME="${{env.ORGANIZATION_NAME}}"
+            export UI_BRANCH="${{env.UI_BRANCH}}"
+            export API_BRANCH="${{env.API_BRANCH}}"
+            kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
+            helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
+                   
+      
+      - name: Cypress e2e tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          working-directory: to-dos-ui
+          config: baseUrl=http://to-dos.local.tourmalinecore.internal:40080
+        env: 
+          CYPRESS_API_URL: http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api
+            
