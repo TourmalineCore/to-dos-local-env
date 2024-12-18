@@ -32,7 +32,9 @@ releases:
       - ingress-nginx
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/Yam1x/to-dos-api.git@/ci/values.yaml?ref={{ env "API_BRANCH" | default "master" }}
+      # The ORGANIZATION_NAME variable is used so that the project can be used in different organizations. 
+      # API_BRANCH and UI_BRANCH indicates which branch should be used when building the project.
+      - git::https://github.com/{{ env "ORGANIZATION_NAME" | default "TourmalineCore" }}/to-dos-api.git@/ci/values.yaml?ref={{ env "API_BRANCH" | default "master" }}
       - values.yaml.gotmpl
 
   - name: to-dos-ui
@@ -49,6 +51,6 @@ releases:
       - to-dos-api
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/Yam1x/to-dos-ui.git@/ci/values.yaml?ref={{ env "UI_BRANCH" | default "master" }}
+      - git::https://github.com/{{ env "ORGANIZATION_NAME"}}/to-dos-ui.git@/ci/values.yaml?ref={{ env "UI_BRANCH" | default "master" }}
       - values.yaml.gotmpl
       - values-to-dos-ui.yaml.gotmpl
