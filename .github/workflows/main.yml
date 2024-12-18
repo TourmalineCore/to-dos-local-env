@@ -43,6 +43,6 @@ jobs:
         with:
           browser: chrome
           working-directory: to-dos-ui
-          config: baseUrl=http://to-dos.local.tourmalinecore.internal:40080/to-dos
+          config: baseUrl=http://to-dos.local.tourmalinecore.internal:40080/
             
 
