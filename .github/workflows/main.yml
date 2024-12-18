@@ -27,21 +27,21 @@ jobs:
  
       - name: Checkout UI 
         run: git clone https://github.com/Yam1x/to-dos-ui.git ./to-dos-ui 
- 
+
+      - name: Set hosts
+        run: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
+       
       - name: Start Local Env 
         uses: devcontainers/ci@v0.3 
         with: 
           runCmd: |  
-            echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
             kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
             helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
             ls 
               
-
       - name: Cypress e2e tests
         uses: cypress-io/github-action@v6
         with:
-          runCmd: echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
           browser: chrome
           working-directory: to-dos-ui
           config: baseUrl=http://to-dos.local.tourmalinecore.internal:40080/
