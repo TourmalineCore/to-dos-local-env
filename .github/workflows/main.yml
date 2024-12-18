@@ -48,7 +48,7 @@ jobs:
 
       - name: Curl API
         run: |
-          cat /etc/hosts
+          cat /etc/hosts 
           curl http://to-dos.local.tourmalinecore.internal:40080
           
       
