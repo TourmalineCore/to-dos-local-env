@@ -39,7 +39,6 @@ jobs:
           ORGANIZATION_NAME: ${{ vars.ORGANIZATION_NAME }}
         with: 
           runCmd: |
-            echo "UI_BRANCH: {{ env "UI_BRANCH" }}"
             echo "UI_BRANCH: ${{ env "UI_BRANCH" }}"
             echo "API_BRANCH: $API_BRANCH"
             echo "variable: ${{ vars.ORGANIZATION_NAME }}"
