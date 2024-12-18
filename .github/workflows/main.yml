@@ -20,8 +20,8 @@ jobs:
           elif [[ "${{ github.event.action }}" == "trigger_from_API" ]]; then 
             echo "UI_BRANCH=master" >> $GITHUB_ENV 
             echo "API_BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV 
-          fi 
-       
+          fi   
+        
       - name: Checkout  
         uses: actions/checkout@v3 
  
@@ -39,10 +39,9 @@ jobs:
           ORGANIZATION_NAME: ${{ vars.ORGANIZATION_NAME }}
         with: 
           runCmd: |
-            echo "$GITHUB_ENV"
-            echo "API_BRANCH: $API_BRANCH"
-            echo "variable: ${{ vars.ORGANIZATION_NAME }}"
-            echo "Organization from container: $ORGANIZATION_NAME"
+            export ORGANIZATION_NAME="${{env.ORGANIZATION_NAME}}"
+            echo "Organization from container: ${{env.ORGANIZATION_NAME}}"
+            echo "UI_BRANCH from container: ${{env.UI_BRANCH}}"
             echo "127.0.0.1 to-dos.local.tourmalinecore.internal" >> /etc/hosts 
             kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig 
             helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply 
@@ -50,7 +49,7 @@ jobs:
 
       - name: Curl API
         run: |
-          cat /etc/hosts
+          cat /etc/hosts 
           curl http://to-dos.local.tourmalinecore.internal:40080
           
       
@@ -63,4 +62,3 @@ jobs:
         env: 
           CYPRESS_API_URL: http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api
             
-
