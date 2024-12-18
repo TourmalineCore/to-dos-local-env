@@ -39,6 +39,6 @@ jobs:
               
 
       - name: Cypress e2e tests
-        uses: cypress-io/github-actions@v6
+        uses: cypress-io/github-action@v6
         with:
           browser: chrome
