@@ -44,6 +44,6 @@ jobs:
         with:
           browser: chrome
           working-directory: to-dos-ui
-          config: API_URL=http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api, baseUrl=http://to-dos.local.tourmalinecore.internal:40080
+          config: baseUrl=http://to-dos.local.tourmalinecore.internal:40080
             
 
