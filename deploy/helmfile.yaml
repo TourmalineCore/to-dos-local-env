@@ -51,6 +51,6 @@ releases:
       - to-dos-api
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/{{ env "ORGANIZATION_NAME"}}/to-dos-ui.git@/ci/values.yaml?ref={{ env "UI_BRANCH" | default "master" }}
+      - git::https://github.com/{{ env "ORGANIZATION_NAME" }}/to-dos-ui.git@/ci/values.yaml?ref={{ env "UI_BRANCH" | default "master" }}
       - values.yaml.gotmpl
       - values-to-dos-ui.yaml.gotmpl
