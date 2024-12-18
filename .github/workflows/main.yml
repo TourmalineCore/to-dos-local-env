@@ -39,7 +39,7 @@ jobs:
           ORGANIZATION_NAME: ${{ vars.ORGANIZATION_NAME }}
         with: 
           runCmd: |
-            echo "UI_BRANCH: ${{ env "UI_BRANCH" }}"
+            echo "$GITHUB_ENV"
             echo "API_BRANCH: $API_BRANCH"
             echo "variable: ${{ vars.ORGANIZATION_NAME }}"
             echo "Organization from container: $ORGANIZATION_NAME"
