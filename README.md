@@ -134,3 +134,42 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 - https://github.com/kubernetes-sigs/kind/issues/3196
 - https://github.com/devcontainers/features
 - https://fenyuk.medium.com/helm-for-kubernetes-helmfile-c22d1ab5e604
+
+# Deploy applications to Docker Desktop Kubernetes cluster
+## Prerequisites
+1. [Register local artificial domain in hosts](#register-local-artificial-domain-in-hosts-do-only-once)
+2. Open project in a [Devcontainer](#vscode-dev-container)
+
+## Create a cluster
+1. In Docker Desktop, go to settings (the gear on the top left);
+2. Select Kubernetes in the settings on the right;
+3. Turn on Kubernetes;
+4. Apply the settings with the “Apply & restart” button.
+
+## Connect to the cluster from Lens
+1. Create `.to-dos-cluster-docker-kubeconfig` file;
+2. Go to `../.kube` folder and open `config` file (on Windows: `C:/Users/User/.kube`, on masOS `Users/username/.kube/config`);
+3. Copy this config and paste to `.to-dos-cluster-docker-kubeconfig` file, created in a first step;
+4. Open Lens;
+5. Click on "+" near "Local Kubeconfigs" label;
+6. Open this folder and click on `.to-dos-cluster-docker-kubeconfig`.
+
+## Deploy applications
+>Note: Now, we only can run this solution on 80 port and cannot change it now. 
+1. Change port of baseExternalUrl to 30080 in `./deploy/environments/local/values.yaml.gotmpl` file:
+```yaml
+baseExternalUrl: "http://to-dos.local.tourmalinecore.internal:30080"
+```
+2. Then, change port to 30080 in `./deploy/values.yaml.gotmpl` file:
+```yaml
+service:
+  ports:
+    http: 30080
+```
+3. Run this command in the terminal:
+```bash
+helmfile cache cleanup && helmfile --kubeconfig $(pwd)/.to-dos-cluster-docker-kubeconfig --environment local --namespace local -f deploy/helmfile.yaml apply
+```
+## Service links
+- ui: http://to-dos.local.tourmalinecore.internal:30080/to-dos
+- api: http://to-dos.local.tourmalinecore.internal:30080/api/to-dos-api/api

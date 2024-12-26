@@ -2,3 +2,4 @@
 
 # this file is dynamic and is populated after kind create cluster or kind delete cluster commands
 .to-dos-cluster-kubeconfig
+.to-dos-cluster-docker-kubeconfig
