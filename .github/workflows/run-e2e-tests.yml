@@ -29,6 +29,3 @@ jobs:
 
     - name: Cypress run
       uses: cypress-io/github-action@v6
-      env:
-        CYPRESS_baseUrl: http://localhost:40080
-        CYPRESS_API_URL: http://localhost:40080/api/to-dos-api
