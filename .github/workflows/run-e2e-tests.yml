@@ -27,6 +27,10 @@ jobs:
       with:
         repository: TourmalineCore/to-dos-ui
 
+    # currently there's a risk that when we run this step the cluster is already destroyed since it was created in a previous step
+    # for the sake of simlicity it is kept like this here
+    # however, in production with longer pipelines: more services and more tests it will most likely start causing issues
+    # creation of the cluster and deployment to it should be in the same step as the e2e tests running 
     - name: Cypress run
       uses: cypress-io/github-action@v6
       env:
