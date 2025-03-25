@@ -1,8 +1,11 @@
 hostname: "localhost"
 
+# there are the same internalPort and externalPort to support both kind and Docker Desktop k8s clusters
+# when these are different e.g. 40080 for externalPort it doesn't work for Docker Desktop
+# it was decided to keep things less explicit to support seemless switch between clusters
 internalPort: "30080"
-
 # -- Port the external HTTP listener is published with.
 externalPort: "30080"
+
 # there has to be externalPort in baseExternalUrl (cannot be used as a variable in the same file)
 baseExternalUrl: "http://localhost:30080" 
