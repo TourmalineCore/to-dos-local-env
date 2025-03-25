@@ -57,7 +57,7 @@ To deploy the stack to the cluster at the first time or re-deploy it after a cha
 helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
 ```
 
-When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://localhost:40080/ in your browser and see `Hello World`.
+When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://localhost:30080/ in your browser and see `Hello World`.
 
 >Note: at the first time this really takes a while.
 
@@ -75,13 +75,13 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 
 ## Services URLs
 
-- ui: http://localhost:40080/to-dos
-- api: http://localhost:40080/api/to-dos-api/api
+- ui: http://localhost:30080/to-dos
+- api: http://localhost:30080/api/to-dos-api/api
 
 ## Troubleshooting
 - OpenLens not showing any pods, deployments, etc.. Make sure the "Namespace" in view "Workloads" is set to "`local`" or "`All namespaces`"
 
-- cannot open http://localhost:40080/
+- cannot open http://localhost:30080/
     ```
     This site can’t be reached localhost refused to connect.
     ```
@@ -138,7 +138,7 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 >Note: Now, we only can run this solution on 80 port and cannot change it now. 
 1. Change port of baseExternalUrl to 30080 in `./deploy/environments/local/values.yaml.gotmpl` file:
 ```yaml
-baseExternalUrl: "http://to-dos.local.tourmalinecore.internal:30080"
+baseExternalUrl: "http://localhost:30080"
 ```
 2. Then, change port to 30080 in `./deploy/values.yaml.gotmpl` file:
 ```yaml
@@ -151,5 +151,5 @@ service:
 helmfile cache cleanup && helmfile --kubeconfig $(pwd)/.to-dos-cluster-docker-kubeconfig --environment local --namespace local -f deploy/helmfile.yaml apply
 ```
 ## Service links
-- ui: http://to-dos.local.tourmalinecore.internal:30080/to-dos
-- api: http://to-dos.local.tourmalinecore.internal:30080/api/to-dos-api/api
+- ui: http://localhost:30080/to-dos
+- api: http://localhost:30080/api/to-dos-api/api

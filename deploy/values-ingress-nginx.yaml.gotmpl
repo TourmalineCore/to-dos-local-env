@@ -5,11 +5,10 @@ controller:
   service:
     type: NodePort
     ports:
-      # -- Port the external HTTP listener is published with.
-      http: "40080"
+      http: "{{ .Values.externalPort }}"
     nodePorts:
-      http: "30080"
+      http: "{{ .Values.internalPort }}"
       https: 
   # not needed in this setup
   admissionWebhooks:
-    enabled: false	
+    enabled: false

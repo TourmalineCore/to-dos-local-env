@@ -1,2 +1,8 @@
 hostname: "localhost"
-baseExternalUrl: "http://localhost:40080"
+
+internalPort: "30080"
+
+# -- Port the external HTTP listener is published with.
+externalPort: "30080"
+# there has to be externalPort in baseExternalUrl (cannot be used as a variable in the same file)
+baseExternalUrl: "http://localhost:30080" 
