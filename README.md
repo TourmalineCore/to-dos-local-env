@@ -11,26 +11,6 @@ More info about the project and its related repos can be found here: [to-dos-doc
 3. Install Visual Studio Code [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) Extension
 3. Install [Lens (commercial)](https://k8slens.dev/) or [OpenLens (open source)](https://github.com/MuhammedKalkan/OpenLens/releases)
 
-## Register local artificial domain in hosts (DO ONLY ONCE)
-
-To be able to open locally the app you need to add its domain to your OS `hosts`.
-
-You need to add this line to the end of your `hosts` file:
-```
-127.0.0.1       to-dos.local.tourmalinecore.internal
-```
-
-### For Windows
-
-Open this file `C:\Windows\System32\drivers\etc\hosts` in **Administrator** mode in e.g. `Notepad` and add the line.
-
-### For MacOS
-
-Execute the following command in terminal to open `hosts` file in sudo mode and add the line.
-```
-sudo nano /etc/hosts
-```
-
 ## VSCode Dev Container
 
 Open this repo's folder in VSCode, it might immediately propose you to re-open it in a Dev Container or you can click on `Remote Explorer`, find plus button and choose the `Open Current Folder in Container` option and wait when it is ready.
@@ -77,7 +57,7 @@ To deploy the stack to the cluster at the first time or re-deploy it after a cha
 helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
 ```
 
-When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://to-dos.local.tourmalinecore.internal:40080/ in your browser and see `Hello World`.
+When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://localhost:40080/ in your browser and see `Hello World`.
 
 >Note: at the first time this really takes a while.
 
@@ -95,15 +75,15 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 
 ## Services URLs
 
-- ui: http://to-dos.local.tourmalinecore.internal:40080/to-dos
-- api: http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/api
+- ui: http://localhost:40080/to-dos
+- api: http://localhost:40080/api/to-dos-api/api
 
 ## Troubleshooting
 - OpenLens not showing any pods, deployments, etc.. Make sure the "Namespace" in view "Workloads" is set to "`local`" or "`All namespaces`"
 
-- cannot open http://to-dos.local.tourmalinecore.internal:40080/
+- cannot open http://localhost:40080/
     ```
-    This site can’t be reached to-dos.local.tourmalinecore.internal refused to connect.
+    This site can’t be reached localhost refused to connect.
     ```
     if you see this in your browser please try to open in Incognito Mode
 - cannot install to-dos-ui chart

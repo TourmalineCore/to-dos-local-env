@@ -1,6 +1,9 @@
 repositories:
   - name: bitnami
-    url: https://charts.bitnami.com/bitnami
+    # url: https://charts.bitnami.com/bitnami
+    # this mirro is used to avoid bocking from certain geographies
+    # you can switch to the default one by uncommeniting the upper url and removing the mirror one
+    url: https://mirror.yandex.ru/helm/charts.bitnami.com
   - name: ingress-nginx
     url: https://kubernetes.github.io/ingress-nginx
 
@@ -32,7 +35,7 @@ releases:
       - ingress-nginx
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/TourmalineCore/to-dos-api.git@/ci/values.yaml?ref=master
+      - git::https://github.com/TourmalineCore/to-dos-api.git@/ci/values.yaml?ref={{ env "TO_DOS_API_BRANCH" | default "master" }}
       - values.yaml.gotmpl
 
   - name: to-dos-ui
@@ -49,6 +52,6 @@ releases:
       - to-dos-api
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/TourmalineCore/to-dos-ui.git@/ci/values.yaml?ref=master
+      - git::https://github.com/TourmalineCore/to-dos-ui.git@/ci/values.yaml?ref={{ env "TO_DOS_UI_BRANCH" | default "master" }}
       - values.yaml.gotmpl
       - values-to-dos-ui.yaml.gotmpl

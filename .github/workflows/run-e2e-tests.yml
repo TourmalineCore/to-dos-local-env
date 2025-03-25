@@ -1,0 +1,38 @@
+name: Cypress E2E Tests Execution Against Local Env
+
+on:
+  push:
+    branches:
+      - feature/*
+
+jobs:
+  run-e2e-against-local-env:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout Local Env Repository
+      uses: actions/checkout@v4
+
+    - name: Deploy Local Env to Kind k8s
+      uses: devcontainers/ci@v0.3
+      with:
+        runCmd: |
+          kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
+          helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+        # we don't need to push docker image that was built using our Dev Container
+        push: never
+
+    - name: Checkout UI Repository
+      uses: actions/checkout@v4
+      with:
+        repository: TourmalineCore/to-dos-ui
+
+    # currently there's a risk that when we run this step the cluster is already destroyed since it was created in a previous step
+    # for the sake of simlicity it is kept like this here
+    # however, in production with longer pipelines: more services and more tests it will most likely start causing issues
+    # creation of the cluster and deployment to it should be in the same step as the e2e tests running 
+    - name: Cypress run
+      uses: cypress-io/github-action@v6
+      env:
+        CYPRESS_baseUrl: http://localhost:40080
+        CYPRESS_API_URL: http://localhost:40080/api/to-dos-api

@@ -21,6 +21,13 @@
 		},
 		"ghcr.io/nucleuscloud/devcontainer-features/helmfile:0.1.0": {
 			"version": "v0.169.1"
+		},
+		// to be able to edit yaml files in bash scripts conviniently using yq
+		"ghcr.io/eitsupi/devcontainer-features/jq-likes:2.1.1": {
+			"jqVersion": "none",
+			"yqVersion": "4.45.1",
+			"gojqVersion": "none",
+			"xqVersion": "none"
 		}
 	},
 	// Use this environment variable if you need to bind mount your local source code into a new container.
