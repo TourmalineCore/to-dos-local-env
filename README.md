@@ -6,10 +6,10 @@ More info about the project and its related repos can be found here: [to-dos-doc
 
 ## Prerequisites
 
-1. Install Docker
+1. Install Docker Desktop (in case of docker engine only kind option is supported)
 2. Install Visual Studio Code
 3. Install Visual Studio Code [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) Extension
-3. Install [Lens (commercial)](https://k8slens.dev/) or [OpenLens (open source)](https://github.com/MuhammedKalkan/OpenLens/releases)
+3. Install [Lens (free for personal use)](https://k8slens.dev/) or [OpenLens (open source)](https://github.com/MuhammedKalkan/OpenLens/releases)
 
 ## VSCode Dev Container
 
@@ -26,7 +26,9 @@ When your Dev Container is ready, the VS Code window will be re-opened. Open a n
 
 ## Manage Local k8s Cluster
 
-### Cluster Creation
+### Using kind Cluster
+
+#### Cluster Creation
 
 To create a new cluster where you will work execute the following command **once**:
 
@@ -34,7 +36,7 @@ To create a new cluster where you will work execute the following command **once
 kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
 ```
 
-### Cluster Removal
+#### Cluster Removal
 
 To delete the previously created cluster by any reason execute the following command:
 
@@ -42,9 +44,19 @@ To delete the previously created cluster by any reason execute the following com
 kind delete cluster --name to-dos
 ```
 
+### Using Docker Desktop Cluster
+
+1. In Docker Desktop, go to settings (the gear on the top left);
+2. Select Kubernetes in the settings on the right;
+3. Turn on Kubernetes;
+4. Apply the settings with the “Apply & restart” button;
+5. Create `.to-dos-cluster-kubeconfig` file in this repo root folder;
+6. Go to your system user `.kube` folder and open `config` file (on Windows: `C:/Users/<USERNAME>/.kube`, on masOS `Users/<USERNAME>/.kube/config`);
+7. Copy this config file content and paste to `.to-dos-cluster-kubeconfig` file, created in the first step.
+
 ### Cluster Connection
 
-Then you should be able to go and grap the created k8s cluster config here in the root of the repo `.to-dos-cluster-kubeconfig` and use it in `Lens` to connect to the cluster.
+Then you should be able to go and grap the k8s cluster config here in the root of the repo `.to-dos-cluster-kubeconfig` and use it in `Lens` to connect to the cluster.
 
 In `Lens` you can go to `File` -> `Add Cluster` and put there the copied `config` file content and create it.
 Then you should be able to connect to it.
@@ -103,9 +115,10 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
     Try to delete the cluster docker container and its generated `.to-dos-cluster-kubeconfig` file and then re-open VSCode as an Administrator and redo everything from scratch.
 
 - in case of any other weird issue:
-    1. Remove the `to-dos-control-plane` docker container.
-    2. Remove the cluster from Lens.
-    3. Re-try over starting from `kind create` command.
+    1a. Remove the `to-dos-control-plane` docker container (in case of kind).
+    1b. Remove the `local` namespace (in case of Docker Desktop).
+    2. Remove the cluster from Lens (in case of kind).
+    3. Re-try over starting from `kind create` command (in case of kind).
 
 ## Useful Refs used to setup repo
 
@@ -114,42 +127,3 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 - https://github.com/kubernetes-sigs/kind/issues/3196
 - https://github.com/devcontainers/features
 - https://fenyuk.medium.com/helm-for-kubernetes-helmfile-c22d1ab5e604
-
-# Deploy applications to Docker Desktop Kubernetes cluster
-## Prerequisites
-1. [Register local artificial domain in hosts](#register-local-artificial-domain-in-hosts-do-only-once)
-2. Open project in a [Devcontainer](#vscode-dev-container)
-
-## Create a cluster
-1. In Docker Desktop, go to settings (the gear on the top left);
-2. Select Kubernetes in the settings on the right;
-3. Turn on Kubernetes;
-4. Apply the settings with the “Apply & restart” button.
-
-## Connect to the cluster from Lens
-1. Create `.to-dos-cluster-docker-kubeconfig` file;
-2. Go to `../.kube` folder and open `config` file (on Windows: `C:/Users/User/.kube`, on masOS `Users/username/.kube/config`);
-3. Copy this config and paste to `.to-dos-cluster-docker-kubeconfig` file, created in a first step;
-4. Open Lens;
-5. Click on "+" near "Local Kubeconfigs" label;
-6. Open this folder and click on `.to-dos-cluster-docker-kubeconfig`.
-
-## Deploy applications
->Note: Now, we only can run this solution on 80 port and cannot change it now. 
-1. Change port of baseExternalUrl to 30080 in `./deploy/environments/local/values.yaml.gotmpl` file:
-```yaml
-baseExternalUrl: "http://localhost:30080"
-```
-2. Then, change port to 30080 in `./deploy/values.yaml.gotmpl` file:
-```yaml
-service:
-  ports:
-    http: 30080
-```
-3. Run this command in the terminal:
-```bash
-helmfile cache cleanup && helmfile --kubeconfig $(pwd)/.to-dos-cluster-docker-kubeconfig --environment local --namespace local -f deploy/helmfile.yaml apply
-```
-## Service links
-- ui: http://localhost:30080/to-dos
-- api: http://localhost:30080/api/to-dos-api/api
