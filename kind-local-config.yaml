@@ -10,6 +10,7 @@ nodes:
   # this port is exposed from the cluster container
   - containerPort: 30080
     # host OS port which is called from the browser e.g. when UI is opened
-    hostPort: 40080
+    # it should be the same as {{ .Values.externalPort }}
+    hostPort: 30080
     # listens to all interfaces
     listenAddress: "0.0.0.0"
