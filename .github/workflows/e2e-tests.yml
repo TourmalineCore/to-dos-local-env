@@ -1,46 +1,49 @@
-name: E2E-test
+name: E2E Tests Execution Against Local Env
 
 on:
-  pull_request:
-    branches: [ "master" ]
+  push:
+    branches:
+      - feature/*
 
 jobs:
-  e2e-tests:
+  run-e2e-against-local-env:
     runs-on: ubuntu-22.04
 
     steps:
-      # Клонирование репозитория Local Env
-      - name: Check out Local Env code
-        uses: actions/checkout@v4
-        with:
-          repository: Tosik43/to-dos-local-env 
-          path: to-dos-local-env
-          
-      # Клонирование репозитория UI
-      - name: Check out UI code
-        uses: actions/checkout@v4
-        with:
-          repository: Tosik43/to-dos-ui
-          path: to-dos-ui
-     
-      # Обновление hosts
-      - name: Update /etc/hosts
-        run: |
-          echo "127.0.0.1 to-dos.local.tourmalinecore.internal" | sudo tee -a /etc/hosts
-                      
-      # Запуск Local Env через devcontainer
-      - name: Run Local Env in Dev Container
-        uses: devcontainers/ci@v0.3
-        with:
-          runCmd: |
-            kind create cluster --name to-dos --config kind-local-config.yaml --kubeconfig ./.to-dos-cluster-kubeconfig
-            helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
-          checkoutPath: to-dos-local-env
-          
-      # Запуск E2E тестов
-      - name: Run e2e tests
-        run: |
-          cd to-dos-ui
-          npm ci
-          npm run cypress:run:e2e:local-env
-  
+    - name: Checkout Local Env
+      uses: actions/checkout@v4
+
+    - name: Deploy Local Env to Kind k8s
+      uses: devcontainers/ci@v0.3
+      with:
+        runCmd: |
+          kind create cluster --name pelican --config kind-local-config.yaml --kubeconfig ./.pelican-cluster-kubeconfig
+          helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+        # we don't need to push docker image that was built using our Dev Container
+        push: never
+
+    # CYPRESS UI TESTS
+
+    - name: Checkout Pelican UI
+      uses: actions/checkout@v4
+      with:
+        repository: TourmalineCore/pelican-ui
+
+    # currently there's a risk that when we run this step the cluster is already destroyed since it was created in a previous step
+    # for the sake of simlicity it is kept like this here
+    # however, in production with longer pipelines: more services and more tests it will most likely start causing issues
+    # creation of the cluster and deployment to it should be in the same step as the e2e tests running 
+    - name: Cypress Run Against Pelican UI
+      uses: cypress-io/github-action@v6
+      with:
+        config-file: playwright.config.ts
+
+    - name: Checkout Pelican CMS
+      uses: actions/checkout@v4
+      with:
+        repository: TourmalineCore/pelican-cms
+
+    - name: Cypress Run Against Pelican CMS
+      uses: cypress-io/github-action@v6
+      with:
+        config-file: playwright.config.ts
