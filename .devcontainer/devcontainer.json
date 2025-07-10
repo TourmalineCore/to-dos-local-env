@@ -16,10 +16,10 @@
 			"helm": "3.16.2",
 			"minikube": "none"
 		},
-		"ghcr.io/devcontainers-contrib/features/kind:1.0.14": {
-			"version": "0.25.0"
+		"ghcr.io/mpriscella/features/kind:1.0.1": {
+			"version": "v0.25.0"
 		},
-		"ghcr.io/nucleuscloud/devcontainer-features/helmfile:0.1.0": {
+		"ghcr.io/schlich/devcontainer-features/helmfile:1.0.0": {
 			"version": "v0.169.1"
 		},
 		// to be able to edit yaml files in bash scripts conviniently using yq
