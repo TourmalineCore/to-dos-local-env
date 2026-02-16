@@ -134,7 +134,7 @@ Go to the docker home page here https://docs.docker.com/engine/release-notes and
 
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
 ```json
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1.4.5": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
 			"version": "29.2.1",
 			"enableNonRootDocker": "true",
 			"moby": "true"
