@@ -124,6 +124,11 @@ There is also sometimes a need to update the docker version. For example, we had
 ```bash
 Error response from daemon: client version 1.41 is too old. Minimum supported API version is 1.44, please upgrade your client to a newer version
 ```
+This error was caused because version 1.41 is deprecated and can't be used with new versions of docker
+
+List of deprecated API versions: https://docs.docker.com/reference/api/engine/#deprecated-api-versions
+
+Comparison of the docker version and it's api version: https://docs.docker.com/reference/api/engine/#deprecated-api-versions
 
 Go to docker home page here https://docs.docker.com/engine/release-notes/29/ and check the current version. For instance, at the moment of docs writing it was `v29.2.1`.
 
