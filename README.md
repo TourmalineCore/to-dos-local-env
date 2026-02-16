@@ -130,7 +130,7 @@ List of deprecated API versions: https://docs.docker.com/reference/api/engine/#d
 
 Comparison of the docker version and it's api version: https://docs.docker.com/reference/api/engine/#api-version-matrix
 
-Go to docker home page here https://docs.docker.com/engine/release-notes/29/ and check the current version. For instance, at the moment of docs writing it was `v29.2.1`.
+Go to the docker home page here https://docs.docker.com/engine/release-notes and check the current version. For instance, at the moment of docs writing it was `v29.2.1`.
 
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
 ```json
