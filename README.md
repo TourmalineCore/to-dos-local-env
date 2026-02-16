@@ -128,7 +128,7 @@ This error was caused because version 1.41 is deprecated and can't be used with 
 
 List of deprecated API versions: https://docs.docker.com/reference/api/engine/#deprecated-api-versions
 
-Comparison of the docker version and it's api version: https://docs.docker.com/reference/api/engine/#deprecated-api-versions
+Comparison of the docker version and it's api version: https://docs.docker.com/reference/api/engine/#api-version-matrix
 
 Go to docker home page here https://docs.docker.com/engine/release-notes/29/ and check the current version. For instance, at the moment of docs writing it was `v29.2.1`.
 
