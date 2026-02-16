@@ -7,7 +7,7 @@
 	"onCreateCommand": "helm plugin install https://github.com/databus23/helm-diff --version=3.9.6",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1.4.5": {
-			"version": "20.10",
+			"version": "29.2.1",
 			"enableNonRootDocker": "true",
 			"moby": "true"
 		},
