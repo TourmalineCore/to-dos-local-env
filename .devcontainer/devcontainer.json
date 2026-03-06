@@ -5,6 +5,7 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
 	"onCreateCommand": "helm plugin install https://github.com/databus23/helm-diff --version=3.9.6",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1.4.5": {
 			"version": "20.10",
