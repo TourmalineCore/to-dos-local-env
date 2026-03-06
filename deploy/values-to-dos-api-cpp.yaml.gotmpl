@@ -1,0 +1,35 @@
+image:
+  tag: "sha-89cdd0ff1ac9062fff2f38bd851ec81d80f5004f"
+
+extraConfigMapEnvVars:
+  ApiOptions__Host: "0.0.0.0"
+  ApiOptions__Port: "80"
+  ApiOptions__LogLevel: "INFO"
+  ApiOptions__NumberOfThreads: "1"
+
+extraSecretEnvVars:
+  DatabaseCredentials__Host: "postgresql"
+  DatabaseCredentials__Port: "5432"
+  DatabaseCredentials__Name: "to-dos-api-cpp-db"
+  DatabaseCredentials__User: {{ .Values.postgresUsername }}
+  DatabaseCredentials__Password: {{ .Values.postgresPassword }}
+
+
+initContainers:
+  - name: db-init-and-migrate
+    image: ghcr.io/tourmalinecore/to-dos-api-cpp:sha-89cdd0ff1ac9062fff2f38bd851ec81d80f5004f
+    command: ["/bin/sh", "-c"]
+    workingDir: /app/alembic
+    args:
+      - "python3 create_db.py && alembic upgrade head"
+    env:
+      - name: DatabaseCredentials__Host
+        value: "postgresql"
+      - name: DatabaseCredentials__Port
+        value: "5432"
+      - name: DatabaseCredentials__User
+        value: {{ .Values.postgresUsername }}
+      - name: DatabaseCredentials__Password
+        value: {{ .Values.postgresPassword }}
+      - name: DatabaseCredentials__Name
+        value: "to-dos-api-cpp-db"
