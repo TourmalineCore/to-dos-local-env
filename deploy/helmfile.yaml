@@ -47,6 +47,23 @@ releases:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
       - values.yaml.gotmpl
 
+  - name: to-dos-api-cpp
+    labels:
+      app: to-dos-api-cpp
+    wait: true
+    chart: bitnami/nginx
+    version: 15.3.5
+    # it won't work anyway until ingress controller is created
+    # thus we wait for it to be ready first
+    needs: 
+      - ingress-nginx
+      - postgresql
+    values:
+      # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
+      - git::https://github.com/TourmalineCore/to-dos-api-cpp.git@/ci/values.yaml?ref=feature/%2352-prepare-a-project-for-local-env
+      - values.yaml.gotmpl
+      - values-to-dos-api-cpp.yaml.gotmpl
+
   - name: to-dos-ui
     labels:
       app: to-dos-ui
