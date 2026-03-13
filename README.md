@@ -127,6 +127,29 @@ That is how the changed features of `.devcontainer/devcontainer.json` is going t
 
 Commit ref where such an upgrade was performed: https://github.com/TourmalineCore/to-dos-local-env/commit/0f1c247feaf0241d3230c68a07233ef727bea5f8.
 
+
+There is also sometimes a need to update the docker version. For example, we had this error during the initialization of devcontainers local-env:
+
+```bash
+Error response from daemon: client version 1.41 is too old. Minimum supported API version is 1.44, please upgrade your client to a newer version
+```
+This error was caused because version 1.41 is deprecated and can't be used with new versions of docker
+
+List of deprecated API versions: https://docs.docker.com/reference/api/engine/#deprecated-api-versions
+
+Comparison of the docker version and it's api version: https://docs.docker.com/reference/api/engine/#api-version-matrix
+
+Go to the docker home page here https://docs.docker.com/engine/release-notes and check the current version. For instance, at the moment of docs writing it was `v29.2.1`.
+
+That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
+```json
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
+			"version": "29.2.1",
+			"enableNonRootDocker": "true",
+			"moby": "true"
+		},
+```
+
 ## Troubleshooting
 - OpenLens not showing any pods, deployments, etc.. Make sure the "Namespace" in view "Workloads" is set to "`local`" or "`All namespaces`"
 
