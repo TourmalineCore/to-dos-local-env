@@ -44,6 +44,16 @@
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// this was needed for kind to be able to create the cluster https://github.com/kubernetes-sigs/kind/issues/3196
 	"remoteUser": "root",
+	// open the cluster port to support auto-forwarding, e.g. in case of Codespaces run
+	"forwardPorts": [
+		30080
+	],
+	"portsAttributes": {
+		"30080": {
+			"label": "Dev Container Local Env Running Port",
+			"requireLocalPort": true
+		}
+	},
 	// to be able to call host OS network services
 	"runArgs": [
 		"--network=host"
