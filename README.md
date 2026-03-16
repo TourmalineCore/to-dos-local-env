@@ -66,7 +66,7 @@ Then you should be able to connect to it.
 To deploy the stack to the cluster at the first time or re-deploy it after a change in charts or their configuration execute the following command:
 
 ```bash
-helmfile -f deploy/helmfile.yaml.gotmpl cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
 ```
 
 If you are running project in GitHub Codespaces use this command with '--concurrency 1' flag which sets the count of services that will be processed by helm in parallel to a single one and thus decreases the RAM consumption like this:
@@ -78,7 +78,7 @@ When the command is complete and all k8s pods are running inside **`local`** nam
 
 >Note: at the first time this really takes a while.
 
->Note: `helmfile -f deploy/helmfile.yaml.gotmpl cache cleanup` is needed to force to re-fetch remote values.yaml files from git repos. Otherwise it will never invalidate them. Links: https://github.com/roboll/helmfile/issues/720#issuecomment-1516613493 and https://helmfile.readthedocs.io/en/latest/#cache.
+>Note: `helmfile cache cleanup` is needed to force to re-fetch remote values.yaml files from git repos. Otherwise it will never invalidate them. Links: https://github.com/roboll/helmfile/issues/720#issuecomment-1516613493 and https://helmfile.readthedocs.io/en/latest/#cache.
 
 >Note: if one of your services version was updated e.g. a newer version was published to `to-dos-ui:latest` you won't see the changes executing `helmfile apply` command. Instead you need to remove the respective service Pod that it can be re-created by its Deployment and fetch the latest docker image. 
 
@@ -87,7 +87,7 @@ When the command is complete and all k8s pods are running inside **`local`** nam
 To see how all charts manifest are going to look like before apply you can execute the following command:
 
 ```bash
-helmfile -f deploy/helmfile.yaml.gotmpl cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl template
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml template
 ```
 
 ## Services URLs
