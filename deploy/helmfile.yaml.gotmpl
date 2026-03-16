@@ -10,7 +10,9 @@ repositories:
 environments:
   local:
     values:
-      - environments/{{ .Environment.Name }}/values.yaml.gotmpl
+      - environments/local/values.yaml.gotmpl
+
+---
 
 releases:
   - name: ingress-nginx
