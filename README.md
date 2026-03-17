@@ -71,7 +71,7 @@ helmfile -f deploy/helmfile.yaml.gotmpl cache cleanup && helmfile --environment 
 
 If you are running project in GitHub Codespaces use this command with '--concurrency 1' flag which sets the count of services that will be processed by helm in parallel to a single one and thus decreases the RAM consumption like this:
 ```bash
-helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply --concurrency 1
+helmfile -f deploy/helmfile.yaml.gotmpl cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply --concurrency 1
 ```
 
 When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://localhost:30080/ in your browser and see `Hello World`.
