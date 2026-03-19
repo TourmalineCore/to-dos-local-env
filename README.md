@@ -66,7 +66,7 @@ Then you should be able to connect to it.
 To deploy the stack to the cluster at the first time or re-deploy it after a change in charts or their configuration execute the following command:
 
 ```bash
-helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
 ```
 
 If you are running project in GitHub Codespaces use this command with '--concurrency 1' flag which sets the count of services that will be processed by helm in parallel to a single one and thus decreases the RAM consumption like this:
@@ -87,7 +87,7 @@ When the command is complete and all k8s pods are running inside **`local`** nam
 To see how all charts manifest are going to look like before apply you can execute the following command:
 
 ```bash
-helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml template
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl template
 ```
 
 ## Services URLs

@@ -24,6 +24,8 @@ releases:
     values:
       - values-ingress-nginx.yaml.gotmpl
 
+  # If this condition is not present, a PostgreSQL release will be created even in cases where it is not required
+  {{ if ne (env "TO_DOS_API_REPO" | default "to-dos-api") "to-dos-api" }}
   - name: postgresql
     namespace: default
     labels:
@@ -33,38 +35,26 @@ releases:
     version: 12.2.7
     values:
       - values-postgre.yaml.gotmpl
+  {{ end }}
 
   - name: to-dos-api
     labels:
       app: to-dos-api
     wait: true
     chart: bitnami/nginx
+    # after 15.3.5 our docker file or setup can no longer start, need to investigate what is wrong for the newer versions
     version: 15.3.5
     # it won't work anyway until ingress controller is created
     # thus we wait for it to be ready first
     needs: 
       - ingress-nginx
-      - postgresql
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/TourmalineCore/to-dos-api-cpp.git@/ci/values.yaml?ref=feature/%2352-prepare-a-project-for-local-env
+      - git::https://github.com/TourmalineCore/{{ env "TO_DOS_API_REPO" | default "to-dos-api" }}.git@/ci/values.yaml?ref={{ env "TO_DOS_API_BRANCH" | default "master" }}
       - values.yaml.gotmpl
-      - values-to-dos-api-cpp.yaml.gotmpl
-  
-  # - name: to-dos-api
-  #   labels:
-  #     app: to-dos-api
-  #   wait: true
-  #   chart: bitnami/nginx
-  #   version: 15.3.5
-  #   # it won't work anyway until ingress controller is created
-  #   # thus we wait for it to be ready first
-  #   needs: 
-  #     - ingress-nginx
-  #   values:
-  #     # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-  #     - git::https://github.com/TourmalineCore/to-dos-api.git@/ci/values.yaml?ref=master
-  #     - values.yaml.gotmpl
+      {{ if env "TO_DOS_API_REPO" }}
+      - values-{{ env "TO_DOS_API_REPO" }}.yaml.gotmpl
+      {{ end }}
 
   - name: to-dos-ui
     labels:
