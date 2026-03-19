@@ -24,7 +24,7 @@ releases:
     values:
       - values-ingress-nginx.yaml.gotmpl
 
-  # For 'to-dos-api' release does not require a database
+  # If this condition is not present, a PostgreSQL release will be created even in cases where it is not required
   {{ if ne (env "TO_DOS_API_REPO" | default "to-dos-api") "to-dos-api" }}
   - name: postgresql
     namespace: default
