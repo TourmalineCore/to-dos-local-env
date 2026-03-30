@@ -1,8 +1,5 @@
 image:
-  registry: ""
-  repository: "to-dos-api-cpp"
-  tag: "sha-ee367fe12fd7fdb276ec750655a310d4b3bab9c5"
-  pullPolicy: "Never"
+  tag: "sha-0a473e7483b7444108b18d6571ba534ee148e614"
 
 extraConfigMapEnvVars:
   API_HOST: "0.0.0.0"
@@ -20,7 +17,7 @@ extraSecretEnvVars:
 
 initContainers:
   - name: "db-init-and-migrate"
-    image: "ghcr.io/tourmalinecore/to-dos-api-cpp:sha-ee367fe12fd7fdb276ec750655a310d4b3bab9c5"
+    image: "ghcr.io/tourmalinecore/to-dos-api-cpp:sha-0a473e7483b7444108b18d6571ba534ee148e614"
     command: ["/bin/sh", "-c"]
     workingDir: "/app/alembic"
     args:
