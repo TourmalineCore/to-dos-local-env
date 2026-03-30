@@ -1,5 +1,11 @@
+# image:
+#   tag: "sha-96a1baba9bb1c14e8a1a066aa3949dd38b0b0fb6"
+
 image:
-  tag: "sha-96a1baba9bb1c14e8a1a066aa3949dd38b0b0fb6"
+  registry: ""
+  repository: "to-dos-api-cpp"
+  tag: "latest"
+  pullPolicy: "Never"
 
 extraConfigMapEnvVars:
   API_HOST: "0.0.0.0"
@@ -17,11 +23,11 @@ extraSecretEnvVars:
 
 initContainers:
   - name: "db-init-and-migrate"
-    image: "ghcr.io/tourmalinecore/to-dos-api-cpp:sha-96a1baba9bb1c14e8a1a066aa3949dd38b0b0fb6"
+    image: "ghcr.io/tourmalinecore/to-dos-api-cpp:latest"
     command: ["/bin/sh", "-c"]
     workingDir: "/app/alembic"
     args:
-      - "python3 create_db.py && alembic upgrade head"
+      - "alembic upgrade head"
     env:
       - name: "POSTGRES_HOST"
         value: "postgresql"
