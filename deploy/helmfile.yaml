@@ -47,7 +47,7 @@ releases:
       - postgresql
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/TourmalineCore/to-dos-api-cpp.git@/ci/values.yaml?ref=feature/%2352-prepare-a-project-for-local-env
+      - git::https://github.com/TourmalineCore/to-dos-api-cpp.git@/ci/values.yaml?ref=master
       - values.yaml.gotmpl
       - values-to-dos-api-cpp.yaml.gotmpl
   
