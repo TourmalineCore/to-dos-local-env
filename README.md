@@ -16,6 +16,7 @@ More info about the project and its related repos can be found here: [to-dos-doc
     + [Cluster Connection](#cluster-connection)
     + [Deployment to Cluster](#deployment-to-cluster)
     + [Debugging Helm Charts](#debugging-helm-charts)
+    + [Makefile targets](#makefile-targets)
   * [Services URLs](#services-urls)
   * [Upgrade Infra Dependencies](#upgrade-infra-dependencies)
   * [Troubleshooting](#troubleshooting)
@@ -86,7 +87,7 @@ Then you should be able to connect to it.
 To deploy the stack to the cluster at the first time or re-deploy it after a change in charts or their configuration execute the following command:
 
 ```bash
-helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
 ```
 
 If you are running project in GitHub Codespaces use this command with '--concurrency 1' flag which sets the count of services that will be processed by helm in parallel to a single one and thus decreases the RAM consumption like this:
@@ -107,8 +108,21 @@ When the command is complete and all k8s pods are running inside **`local`** nam
 To see how all charts manifest are going to look like before apply you can execute the following command:
 
 ```bash
-helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml template
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl template
 ```
+
+### Makefile targets
+
+For simplicity, we use Makefile targets. The targets are described in `./Makefile`. Using targets is really useful because there are a few API versions available for deployment: the NestJS version (to-dos-api) and the C++ version (to-dos-api-cpp).
+
+You can find more information about the available APIs: [to-dos-documentation](https://github.com/TourmalineCore/to-dos-documentation).
+
+To run a Makefile target, use the command `make <target-name>`.
+
+The following targets are available:
+1. apply-releases - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api as its API.
+2. apply-releases-with-cpp-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api-cpp as its API.
+3. destroy-releases - Destroys all releases described in `deploy/helmfile.yaml.gotmpl`.
 
 ## Services URLs
 
@@ -137,21 +151,20 @@ From time to time there is a need to upgrade kind, k8s, helm, and helmfile versi
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
  
 ```json
-		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1.1.9": {
-			"version": "1.33.1",
-			"helm": "3.18.3",
-			"minikube": "none"
-		},
-		"ghcr.io/mpriscella/features/kind:1.0.1": {
-			"version": "v0.29.0"
-		},
-		"ghcr.io/schlich/devcontainer-features/helmfile:1.0.0": {
-			"version": "v1.1.3"
-		},
+"ghcr.io/devcontainers/features/kubectl-helm-minikube:1.1.9": {
+  "version": "1.33.1",
+  "helm": "3.18.3",
+  "minikube": "none"
+},
+"ghcr.io/mpriscella/features/kind:1.0.1": {
+  "version": "v0.29.0"
+},
+"ghcr.io/schlich/devcontainer-features/helmfile:1.0.0": {
+  "version": "v1.1.3"
+}
 ```
 
 Commit ref where such an upgrade was performed: https://github.com/TourmalineCore/to-dos-local-env/commit/0f1c247feaf0241d3230c68a07233ef727bea5f8.
-
 
 There is also sometimes a need to update the docker version. For example, we had this error during the initialization of devcontainers local-env:
 
@@ -168,11 +181,11 @@ Go to the docker home page here https://docs.docker.com/engine/release-notes and
 
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
 ```json
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
-			"version": "29.2.1",
-			"enableNonRootDocker": "true",
-			"moby": "true"
-		},
+"ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
+  "version": "29.2.1",
+  "enableNonRootDocker": "true",
+  "moby": "true"
+}
 ```
 
 ## Troubleshooting
