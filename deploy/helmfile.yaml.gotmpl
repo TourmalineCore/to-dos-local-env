@@ -23,9 +23,8 @@ releases:
     version: 4.10.1
     values:
       - values-ingress-nginx.yaml.gotmpl
-
-  # If this condition is not present, a PostgreSQL release will be created even in cases where it is not required
-  {{ if ne (env "TO_DOS_API_REPO" | default "to-dos-api") "to-dos-api" }}
+      
+{{ if eq (env "USE_DATABASE" | default "false") "true" }}
   - name: postgresql
     namespace: default
     labels:
@@ -35,7 +34,7 @@ releases:
     version: 12.2.7
     values:
       - values-postgre.yaml.gotmpl
-  {{ end }}
+{{ end }}
 
   - name: to-dos-api
     labels:
@@ -52,9 +51,9 @@ releases:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
       - git::https://github.com/TourmalineCore/{{ env "TO_DOS_API_REPO" | default "to-dos-api" }}.git@/ci/values.yaml?ref={{ env "TO_DOS_API_BRANCH" | default "master" }}
       - values.yaml.gotmpl
-      {{ if env "TO_DOS_API_REPO" }}
+    {{ if env "TO_DOS_API_REPO" }}
       - values-{{ env "TO_DOS_API_REPO" }}.yaml.gotmpl
-      {{ end }}
+    {{ end }}
 
   - name: to-dos-ui
     labels:
