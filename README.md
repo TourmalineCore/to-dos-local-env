@@ -151,17 +151,17 @@ From time to time there is a need to upgrade kind, k8s, helm, and helmfile versi
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
  
 ```json
-		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1.1.9": {
-			"version": "1.33.1",
-			"helm": "3.18.3",
-			"minikube": "none"
-		},
-		"ghcr.io/mpriscella/features/kind:1.0.1": {
-			"version": "v0.29.0"
-		},
-		"ghcr.io/schlich/devcontainer-features/helmfile:1.0.0": {
-			"version": "v1.1.3"
-		},
+"ghcr.io/devcontainers/features/kubectl-helm-minikube:1.1.9": {
+  "version": "1.33.1",
+  "helm": "3.18.3",
+  "minikube": "none"
+},
+"ghcr.io/mpriscella/features/kind:1.0.1": {
+  "version": "v0.29.0"
+},
+"ghcr.io/schlich/devcontainer-features/helmfile:1.0.0": {
+  "version": "v1.1.3"
+}
 ```
 
 Commit ref where such an upgrade was performed: https://github.com/TourmalineCore/to-dos-local-env/commit/0f1c247feaf0241d3230c68a07233ef727bea5f8.
@@ -181,11 +181,11 @@ Go to the docker home page here https://docs.docker.com/engine/release-notes and
 
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
 ```json
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
-			"version": "29.2.1",
-			"enableNonRootDocker": "true",
-			"moby": "true"
-		},
+"ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
+  "version": "29.2.1",
+  "enableNonRootDocker": "true",
+  "moby": "true"
+}
 ```
 
 ## Troubleshooting
