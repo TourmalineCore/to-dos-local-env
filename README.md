@@ -97,6 +97,23 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 
 When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://localhost:30080/ in your browser and see `Hello World`.
 
+Keep in mind that, by default, the postgresql release will not be deployed. If you need to include the PostgreSQL release in the deployment, set the `USE_DATABASE` environment variable to `true`
+
+Additionally, by default, the to-dos-api (NestJS version) will be used as the API. If you need to use to-dos-api-cpp as the API, set the `TO_DOS_API_REPO` environment variable to `to-dos-api-cpp`.
+
+You can find more information about the available APIs: [to-dos-documentation](https://github.com/TourmalineCore/to-dos-documentation).
+
+If you need to use a `values.yaml` file from a branch other than the `master` branch of the API repository, set the `TO_DOS_API_BRANCH` environment variable to the name of the branch from which the `values.yaml` file will be used.
+
+For example:
+```bash
+export USE_DATABASE=true
+export TO_DOS_API_REPO=to-dos-api-cpp
+export TO_DOS_API_BRANCH=chore/update-values-configuration
+
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
+```
+
 >Note: at the first time this really takes a while.
 
 >Note: `helmfile cache cleanup` is needed to force to re-fetch remote values.yaml files from git repos. Otherwise it will never invalidate them. Links: https://github.com/roboll/helmfile/issues/720#issuecomment-1516613493 and https://helmfile.readthedocs.io/en/latest/#cache.
