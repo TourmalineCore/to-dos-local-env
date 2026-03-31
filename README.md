@@ -16,6 +16,7 @@ More info about the project and its related repos can be found here: [to-dos-doc
     + [Cluster Connection](#cluster-connection)
     + [Deployment to Cluster](#deployment-to-cluster)
     + [Debugging Helm Charts](#debugging-helm-charts)
+    + [Makefile targets](#makefile-targets)
   * [Services URLs](#services-urls)
   * [Upgrade Infra Dependencies](#upgrade-infra-dependencies)
   * [Troubleshooting](#troubleshooting)
@@ -110,6 +111,19 @@ To see how all charts manifest are going to look like before apply you can execu
 helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl template
 ```
 
+### Makefile targets
+
+For simplicity, we use Makefile targets. The targets are described in `./Makefile`. Using targets is really useful because there are a few API versions available for deployment: the NestJS version (to-dos-api) and the C++ version (to-dos-api-cpp).
+
+You can find more information about the available APIs: [to-dos-documentation](https://github.com/TourmalineCore/to-dos-documentation).
+
+To run a Makefile target, use the command `make <target-name>`.
+
+The following targets are available:
+1. apply-releases - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api as its API.
+2. apply-releases-with-cpp-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api-cpp as its API.
+3. destroy-releases - Destroys all releases described in `deploy/helmfile.yaml.gotmpl`.
+
 ## Services URLs
 
 ### Run Locally
@@ -151,7 +165,6 @@ That is how the changed features of `.devcontainer/devcontainer.json` is going t
 ```
 
 Commit ref where such an upgrade was performed: https://github.com/TourmalineCore/to-dos-local-env/commit/0f1c247feaf0241d3230c68a07233ef727bea5f8.
-
 
 There is also sometimes a need to update the docker version. For example, we had this error during the initialization of devcontainers local-env:
 
