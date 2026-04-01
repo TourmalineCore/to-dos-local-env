@@ -1,5 +1,5 @@
 image:
-  tag: "sha-0a473e7483b7444108b18d6571ba534ee148e614"
+  tag: "latest"
 
 extraConfigMapEnvVars:
   API_HOST: "0.0.0.0"
@@ -17,7 +17,7 @@ extraSecretEnvVars:
 
 initContainers:
   - name: "db-init-and-migrate"
-    image: "ghcr.io/tourmalinecore/to-dos-api-cpp:sha-0a473e7483b7444108b18d6571ba534ee148e614"
+    image: "ghcr.io/tourmalinecore/to-dos-api-cpp:latest"
     command: ["/bin/sh", "-c"]
     workingDir: "/app/alembic"
     args:
