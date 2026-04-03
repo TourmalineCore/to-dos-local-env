@@ -24,7 +24,7 @@ releases:
     values:
       - values-ingress-nginx.yaml.gotmpl
       
-{{ if eq (env "USE_DATABASE" | default "false") "true" }}
+{{ if eq (env "DEPLOY_DATABASE" | default "false") "true" }}
   - name: postgresql
     namespace: default
     labels:

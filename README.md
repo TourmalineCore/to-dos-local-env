@@ -107,7 +107,6 @@ If you need to use a `values.yaml` file from a branch other than the `master` br
 
 For example:
 ```bash
-export USE_DATABASE=true
 export TO_DOS_API_REPO=to-dos-api-cpp
 export TO_DOS_API_BRANCH=chore/update-values-configuration
 
