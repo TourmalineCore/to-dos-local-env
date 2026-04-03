@@ -97,7 +97,7 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 
 When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://localhost:30080/ in your browser and see `Hello World`.
 
-Keep in mind that, by default, the postgresql release will not be deployed. If you need to include the PostgreSQL release in the deployment, set the `USE_DATABASE` environment variable to `true`
+Keep in mind that, by default, the postgresql release will not be deployed. If you need to include the PostgreSQL release in the deployment, set the `DEPLOY_DATABASE` environment variable to `true`
 
 Additionally, by default, the to-dos-api (NestJS version) will be used as the API. If you need to use to-dos-api-cpp as the API, set the `TO_DOS_API_REPO` environment variable to `to-dos-api-cpp`.
 
@@ -107,6 +107,7 @@ If you need to use a `values.yaml` file from a branch other than the `master` br
 
 For example:
 ```bash
+export DEPLOY_DATABASE=true
 export TO_DOS_API_REPO=to-dos-api-cpp
 export TO_DOS_API_BRANCH=chore/update-values-configuration
 
@@ -136,8 +137,8 @@ You can find more information about the available APIs: [to-dos-documentation](h
 To run a Makefile target, use the command `make <target-name>`.
 
 The following targets are available:
-1. apply-releases - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api as its API.
-2. apply-releases-with-cpp-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api-cpp as its API.
+1. deploy-with-nestjs-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api as its API.
+2. deploy-with-cpp-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api-cpp as its API.
 
 ## Services URLs
 

@@ -6,17 +6,14 @@ SHELL := /bin/bash
 .PHONY: apply-releases apply-releases-with-cpp-api destroy-releases
 
 # Deploys all releases described in helmfile.yaml.gotmpl with the original to-dos-api.
-apply-releases:
-	@export USE_DATABASE=false && \
+deploy-with-nestjs-api:
 	@export DEPLOY_DATABASE=false && \
 	helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
 
 # Deploys all releases described in helmfile.yaml.gotmpl with the C++ version of to-dos-api.
-# NOTE: If USE_DATABASE is set to false, to-dos-api-cpp will not be able 
 # NOTE: If DEPLOY_DATABASE is set to false, to-dos-api-cpp will not be able 
 # to start because the initContainer will not be able to apply the migrations.
-apply-releases-with-cpp-api:
-	@export USE_DATABASE=true && \
+deploy-with-cpp-api:
 	@export DEPLOY_DATABASE=true && \
 	export TO_DOS_API_REPO=to-dos-api-cpp && \
 	helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
