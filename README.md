@@ -248,7 +248,7 @@ How to deploy images from GitHub Registry or local Docker environments
 
 ### Using Specific Image from GitHub Registry
 
-To deploy specific image tag published to GitHub Registry, use the following configuration for `values-your-service.yaml.gotmpl` file:
+To deploy specific image tag published to GitHub Registry, use the following configuration for `values-your-service.yaml.gotmpl` file (for example, to-dos-ui):
 
 ```yaml
 # to-dos-ui as example
@@ -262,20 +262,20 @@ image:
 
 ### Using Local Docker Image
 
-To deploy local Docker image, first load it into the kind cluster using the following command:
+To deploy local Docker image, first load it into the kind cluster using the following command (for example, to-dos-ui):
 
 ```bash
-kind load docker-image your-local-image:your-tag --name your-cluster-name
+kind load docker-image to-dos-ui:0.0.1 --name your-cluster-name
 ```
 
-Then use the following configuration for `values-your-service.yaml.gotmpl` file:
+Then use the following configuration for `values-to-dos-ui.yaml.gotmpl` file:
 
 ```yaml
 image:
   registry: ""
-  repository: "my-layout"
+  repository: "to-dos-ui"
   tag: "0.0.1"
   pullPolicy: "Never"
 ```
 
-Repository and tag are `your-local-image` and `your-tag` from deploy command.
+Repository and tag are `to-dos-ui` and `0.0.1` from deploy command.
