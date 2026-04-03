@@ -139,7 +139,6 @@ To run a Makefile target, use the command `make <target-name>`.
 The following targets are available:
 1. apply-releases - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api as its API.
 2. apply-releases-with-cpp-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api-cpp as its API.
-3. destroy-releases - Destroys all releases described in `deploy/helmfile.yaml.gotmpl`.
 
 ## Services URLs
 

@@ -17,10 +17,3 @@ apply-releases-with-cpp-api:
 	@export USE_DATABASE=true && \
 	export TO_DOS_API_REPO=to-dos-api-cpp && \
 	helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
-
-# Destroys all releases described in helmfile.yaml.gotmpl.
-# NOTE: If USE_DATABASE is set to false, the database release will 
-# not be included in helmfile.yaml.gotmpl and will not be cleaned up.
-destroy-releases:
-	@export USE_DATABASE=true && \
-	helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl destroy
