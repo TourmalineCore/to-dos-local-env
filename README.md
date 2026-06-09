@@ -4,6 +4,27 @@ This repo enables running the whole to-dos project stack locally in k8s in Docke
 
 More info about the project and its related repos can be found here: [to-dos-documentation](https://github.com/TourmalineCore/to-dos-documentation).
 
+## Table of contents
+
+- [Local Kubernetes Environment](#local-kubernetes-environment)
+  * [Table of contents](#table-of-contents)
+  * [Prerequisites](#prerequisites)
+  * [VSCode Dev Container](#vscode-dev-container)
+  * [Manage Local k8s Cluster](#manage-local-k8s-cluster)
+    + [Cluster Creation](#cluster-creation)
+    + [Cluster Removal](#cluster-removal)
+    + [Cluster Connection](#cluster-connection)
+    + [Deployment to Cluster](#deployment-to-cluster)
+    + [Debugging Helm Charts](#debugging-helm-charts)
+    + [Makefile targets](#makefile-targets)
+  * [Services URLs](#services-urls)
+  * [Upgrade Infra Dependencies](#upgrade-infra-dependencies)
+  * [Troubleshooting](#troubleshooting)
+  * [Useful Refs used to setup repo](#useful-refs-used-to-setup-repo)
+  * [Deploy Specific Configuration](#deploy-specific-configuration)
+    + [Using Specific Image from GitHub Registry](#using-specific-image-from-github-registry)
+    + [Using Local Docker Image](#using-local-docker-image)
+
 ## Prerequisites
 
 1. Install Docker Desktop (in case of docker engine only kind option is supported)
@@ -66,7 +87,7 @@ Then you should be able to connect to it.
 To deploy the stack to the cluster at the first time or re-deploy it after a change in charts or their configuration execute the following command:
 
 ```bash
-helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
 ```
 
 If you are running project in GitHub Codespaces use this command with '--concurrency 1' flag which sets the count of services that will be processed by helm in parallel to a single one and thus decreases the RAM consumption like this:
@@ -75,6 +96,23 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 ```
 
 When the command is complete and all k8s pods are running inside **`local`** namespace you should be able to navigate to http://localhost:30080/ in your browser and see `Hello World`.
+
+Keep in mind that, by default, the postgresql release will not be deployed. If you need to include the PostgreSQL release in the deployment, set the `DEPLOY_DATABASE` environment variable to `true`
+
+Additionally, by default, the to-dos-api (NestJS version) will be used as the API. If you need to use to-dos-api-cpp as the API, set the `TO_DOS_API_REPO` environment variable to `to-dos-api-cpp`.
+
+You can find more information about the available APIs: [to-dos-documentation](https://github.com/TourmalineCore/to-dos-documentation).
+
+If you need to use a `values.yaml` file from a branch other than the `master` branch of the API repository, set the `TO_DOS_API_BRANCH` environment variable to the name of the branch from which the `values.yaml` file will be used.
+
+For example:
+```bash
+export DEPLOY_DATABASE=true
+export TO_DOS_API_REPO=to-dos-api-cpp
+export TO_DOS_API_BRANCH=chore/update-values-configuration
+
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl apply
+```
 
 >Note: at the first time this really takes a while.
 
@@ -87,20 +125,33 @@ When the command is complete and all k8s pods are running inside **`local`** nam
 To see how all charts manifest are going to look like before apply you can execute the following command:
 
 ```bash
-helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml template
+helmfile cache cleanup && helmfile --environment local --namespace local -f deploy/helmfile.yaml.gotmpl template
 ```
+
+### Makefile targets
+
+For simplicity, we use Makefile targets. The targets are described in `./Makefile`. Using targets is really useful because there are a few API versions available for deployment: the NestJS version (to-dos-api) and the C++ version (to-dos-api-cpp).
+
+You can find more information about the available APIs: [to-dos-documentation](https://github.com/TourmalineCore/to-dos-documentation).
+
+To run a Makefile target, use the command `make <target-name>`.
+
+The following targets are available:
+1. deploy-with-nestjs-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api as its API.
+2. deploy-with-cpp-api - Deploys all releases described in `deploy/helmfile.yaml.gotmpl`. It uses the to-dos-api-cpp as its API.
+3. destroy - Destroys all releases described in `deploy/helmfile.yaml.gotmpl`.
 
 ## Services URLs
 
 ### Run Locally
 
-- ui: http://localhost:30080/to-dos
-- api: http://localhost:30080/api/to-dos-api/api
+- UI: http://localhost:30080/to-dos
+- API: http://localhost:30080/api/to-dos-api/api
 
 ### Run in GitHub Codespaces
 
-- ui: <AUTOGENERATED_RANDOM_HOST>/to-dos
-- api: <AUTOGENERATED_RANDOM_HOST>/api/to-dos-api/api
+- UI: <AUTOGENERATED_RANDOM_HOST>/to-dos
+- API: <AUTOGENERATED_RANDOM_HOST>/api/to-dos-api/api
 
 >Note: Comparing to local run where you specify 30080 port in case of Codespaces run the port is not specified. Instead GitHub makes it a part of the host, e.g. that is an example of a generated host `https://curly-cod-xx4645g6q52pxpx-30080.app.github.dev`, you can find `30080` as part of the subdomain "random" name. 
 
@@ -117,21 +168,20 @@ From time to time there is a need to upgrade kind, k8s, helm, and helmfile versi
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
  
 ```json
-		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1.1.9": {
-			"version": "1.33.1",
-			"helm": "3.18.3",
-			"minikube": "none"
-		},
-		"ghcr.io/mpriscella/features/kind:1.0.1": {
-			"version": "v0.29.0"
-		},
-		"ghcr.io/schlich/devcontainer-features/helmfile:1.0.0": {
-			"version": "v1.1.3"
-		},
+"ghcr.io/devcontainers/features/kubectl-helm-minikube:1.1.9": {
+  "version": "1.33.1",
+  "helm": "3.18.3",
+  "minikube": "none"
+},
+"ghcr.io/mpriscella/features/kind:1.0.1": {
+  "version": "v0.29.0"
+},
+"ghcr.io/schlich/devcontainer-features/helmfile:1.0.0": {
+  "version": "v1.1.3"
+}
 ```
 
 Commit ref where such an upgrade was performed: https://github.com/TourmalineCore/to-dos-local-env/commit/0f1c247feaf0241d3230c68a07233ef727bea5f8.
-
 
 There is also sometimes a need to update the docker version. For example, we had this error during the initialization of devcontainers local-env:
 
@@ -148,11 +198,11 @@ Go to the docker home page here https://docs.docker.com/engine/release-notes and
 
 That is how the changed features of `.devcontainer/devcontainer.json` is going to look:
 ```json
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
-			"version": "29.2.1",
-			"enableNonRootDocker": "true",
-			"moby": "true"
-		},
+"ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
+  "version": "29.2.1",
+  "enableNonRootDocker": "true",
+  "moby": "true"
+}
 ```
 
 ## Troubleshooting
@@ -192,3 +242,41 @@ That is how the changed features of `.devcontainer/devcontainer.json` is going t
 - https://github.com/kubernetes-sigs/kind/issues/3196
 - https://github.com/devcontainers/features
 - https://fenyuk.medium.com/helm-for-kubernetes-helmfile-c22d1ab5e604
+
+## Deploy Specific Configuration
+
+How to deploy images from GitHub Registry or local Docker environments
+
+### Using Specific Image from GitHub Registry
+
+To deploy specific image tag published to GitHub Registry, use the following configuration for `values-your-service.yaml.gotmpl` file (for example, to-dos-ui):
+
+```yaml
+# to-dos-ui as example
+
+image:
+  registry: ghcr.io
+  repository: "tourmalinecore/to-dos-ui"
+  # Write tag of your image for deploy (change only symbols after "sha-")
+  tag: "sha-f1c1e64bcb3401f602ac3b2afdf6066c6e2d4876"
+```
+
+### Using Local Docker Image
+
+To deploy local Docker image, first load it into the kind cluster using the following command (for example, to-dos-ui):
+
+```bash
+kind load docker-image to-dos-ui:0.0.1 --name your-cluster-name
+```
+
+Then use the following configuration for `values-to-dos-ui.yaml.gotmpl` file:
+
+```yaml
+image:
+  registry: ""
+  repository: "to-dos-ui"
+  tag: "0.0.1"
+  pullPolicy: "Never"
+```
+
+Repository and tag are `to-dos-ui` and `0.0.1` from deploy command.

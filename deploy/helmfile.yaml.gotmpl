@@ -23,6 +23,18 @@ releases:
     version: 4.10.1
     values:
       - values-ingress-nginx.yaml.gotmpl
+      
+{{ if eq (env "DEPLOY_DATABASE" | default "false") "true" }}
+  - name: postgresql
+    namespace: default
+    labels:
+      app: postgresql
+    wait: true
+    chart: bitnami/postgresql
+    version: 12.2.7
+    values:
+      - values-postgre.yaml.gotmpl
+{{ end }}
 
   - name: to-dos-api
     labels:
@@ -37,8 +49,11 @@ releases:
       - ingress-nginx
     values:
       # https://helmfile.readthedocs.io/en/latest/#loading-remote-environment-values-files
-      - git::https://github.com/TourmalineCore/to-dos-api.git@/ci/values.yaml?ref={{ env "TO_DOS_API_BRANCH" | default "master" }}
+      - git::https://github.com/TourmalineCore/{{ env "TO_DOS_API_REPO" | default "to-dos-api" }}.git@/ci/values.yaml?ref={{ env "TO_DOS_API_BRANCH" | default "master" }}
       - values.yaml.gotmpl
+    {{ if env "TO_DOS_API_REPO" }}
+      - values-{{ env "TO_DOS_API_REPO" }}.yaml.gotmpl
+    {{ end }}
 
   - name: to-dos-ui
     labels:

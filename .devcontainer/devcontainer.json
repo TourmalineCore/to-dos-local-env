@@ -6,6 +6,7 @@
 	"image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
 	// --verify=false flag is used to fix error "plugin source does not support verification" during plugin installation
 	"onCreateCommand": "helm plugin install https://github.com/databus23/helm-diff --version=3.14.1 --verify=false",
+	// More information about Dev Container features: https://containers.dev/features
 	"features": {
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.5": {
 			"version": "29.2.1",

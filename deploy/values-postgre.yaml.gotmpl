@@ -1,0 +1,19 @@
+global:
+    postgresql:
+        auth:
+            postgresPassword: {{ .Values.adminPostgresPassword }}
+            username: {{ .Values.postgresUsername }}
+            password: {{ .Values.postgresPassword }}
+            database: postgres
+
+primary:
+    service:
+        type: NodePort
+        nodePorts:
+            postgresql: 30100
+
+#    persistence:
+#        size: {{ env "POSTGRES_PV_SIZE" }}
+
+image:
+    repository: bitnamilegacy/postgresql
